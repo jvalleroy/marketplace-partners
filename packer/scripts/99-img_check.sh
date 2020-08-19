@@ -64,7 +64,7 @@ function checkAgent {
             STATUS=2
       if [[ $OS == "CentOS Linux" ]]; then
         echo "The agent can be removed with 'sudo yum remove do-agent' "
-      elif [[ $OS == "Ubuntu" ]]; then
+      elif [[ $OS == "Ubuntu" || $OS == "Debian GNU/Linux" ]]; then
         echo "The agent can be removed with 'sudo apt-get purge do-agent' "
       fi
   else
@@ -316,7 +316,7 @@ function checkFirewall {
     if [[ $OS == "Ubuntu" ]]; then
       fw="ufw"
       service ufw status >/dev/null 2>&1
-    elif [[ $OS == "CentOS Linux" ]]; then
+    elif [[ $OS == "CentOS Linux" || $OS == "Debian GNU/Linux" ]]; then
       fw="firewalld"
       systemctl status firewalld >/dev/null 2>&1
     fi
@@ -367,7 +367,9 @@ function checkUpdates {
         else
             echo -en "\e[32m[PASS]\e[0m There are no pending security updates for this image.\n"
             ((PASS++))
-        fi
+         fi
+    elif [[ $OS == "Debian GNU/Linux" ]]; then
+	echo "Skipping update check."
     else
         echo "Error encountered"
         exit
