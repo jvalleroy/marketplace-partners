@@ -20,11 +20,19 @@
 	    "type": "shell",
 	    "inline": [
 		"cloud-init status --wait",
+		"apt-get -qqy remove --purge unscd",
 		"apt-get -qqy update",
 		"echo #!/bin/sh > /usr/sbin/policy-rc.d",
 		"echo exit 101 >> /usr/sbin/policy-rc.d",
 		"chmod 0755 /usr/sbin/policy-rc.d",
 		"DEBIAN_FRONTEND=noninteractive apt-get -qqy install {{user `apt_packages`}}",
+		"rm /usr/sbin/policy-rc.d",
+		"systemctl start freedombox-setup-repositories",
+		"apt-get -qqy update",
+		"echo #!/bin/sh > /usr/sbin/policy-rc.d",
+		"echo exit 101 >> /usr/sbin/policy-rc.d",
+		"chmod 0755 /usr/sbin/policy-rc.d",
+		"unattended-upgrade",
 		"rm /usr/sbin/policy-rc.d"
 	    ]
 	},
