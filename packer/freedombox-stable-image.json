@@ -1,7 +1,7 @@
 {
     "variables": {
 	"token": "{{env `DIGITALOCEAN_TOKEN`}}",
-	"image_name": "freedombox-{{timestamp}}",
+	"image_name": "freedombox-stable-{{timestamp}}",
 	"apt_packages": "freedombox"
     },
     "builders": [
@@ -20,9 +20,12 @@
 	    "type": "shell",
 	    "inline": [
 		"cloud-init status --wait",
-		"apt -qqy update",
-		"apt -qqy -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' full-upgrade",
-		"DEBIAN_FRONTEND=noninteractive apt -qqy -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' install {{user `apt_packages`}}"
+		"apt-get -qqy update",
+		"echo #!/bin/sh > /usr/sbin/policy-rc.d",
+		"echo exit 101 >> /usr/sbin/policy-rc.d",
+		"chmod 0755 /usr/sbin/policy-rc.d",
+		"DEBIAN_FRONTEND=noninteractive apt-get -qqy install {{user `apt_packages`}}",
+		"rm /usr/sbin/policy-rc.d"
 	    ]
 	},
 	{
